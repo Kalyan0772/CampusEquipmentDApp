@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Equipment Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">C</div>
+            <div>
+                <h2>Campus Equipment</h2>
+                <p>Equipment Lending Portal</p>
+            </div>
+        </div>
+
+        <button id="connectWallet" class="wallet-btn">
+            Connect MetaMask
+        </button>
+    </header>
+
+    <main class="container">
+
+        <section class="welcome">
+            <div>
+                <p class="eyebrow">CAMPUS RESOURCE MANAGEMENT</p>
+                <h1>Equipment Lending System</h1>
+                <p class="subtitle">
+                    Manage campus equipment, track borrowing and maintain
+                    transparent transaction records on Ethereum.
+                </p>
+            </div>
+            <div class="network-card">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">Wallet not connected</span>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <p>Total Equipment</p>
+                <h2 id="totalEquipment">0</h2>
+                <span>Registered items</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Available</p>
+                <h2 id="availableEquipment">0</h2>
+                <span>Ready to borrow</span>
+            </div>
+
+            <div class="stat-card">
+                <p>Currently Borrowed</p>
+                <h2 id="borrowedEquipment">0</h2>
+                <span>Items in use</span>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Equipment Inventory</h2>
+                    <p>Browse registered campus equipment and its availability.</p>
+                </div>
+
+                <button id="refreshButton" class="secondary-btn">
+                    Refresh Inventory
+                </button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Equipment ID</th>
+                            <th>Equipment Name</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Borrower</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipmentTable">
+                        <tr>
+                            <td colspan="6" class="empty">
+                                Connect your wallet and load the inventory.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="two-column">
+
+            <div class="panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Register Equipment</h2>
+                        <p>Admin access required.</p>
+                    </div>
+                </div>
+
+                <form id="registerForm">
+                    <label for="equipmentName">Equipment Name</label>
+                    <input
+                        type="text"
+                        id="equipmentName"
+                        placeholder="e.g. Laptop"
+                        required
+                    >
+
+                    <label for="equipmentCategory">Category</label>
+                    <select id="equipmentCategory" required>
+                        <option value="">Select category</option>
+                        <option value="Computing">Computing</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Camera">Camera</option>
+                        <option value="Display">Display</option>
+                        <option value="Audio">Audio</option>
+                        <option value="Laboratory">Laboratory</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input
+                        type="text"
+                        id="customCategory"
+                        placeholder="Enter custom category"
+                        style="display: none;"
+                    />
+                    <button type="submit" class="primary-btn">
+                        Register Equipment
+                    </button>
+                </form>
+            </div>
+
+            <div class="panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>My Borrowing Activity</h2>
+                        <p>Check your equipment borrowing records.</p>
+                    </div>
+                </div>
+
+                <div id="activityArea" class="activity-area">
+                    Connect your wallet to view your activity.
+                </div>
+            </div>
+
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Transaction Status</h2>
+                    <p>Updates from smart contract operations.</p>
+                </div>
+            </div>
+
+            <div id="messageBox" class="message">
+                Website ready. Connect your wallet to begin.
+            </div>
+
+            <p id="transactionHash" class="transaction-hash"></p>
+        </section>
+
+        <footer>
+            <p>Campus Equipment Lending System</p>
+            <p>Powered by Ethereum Smart Contracts</p>
+        </footer>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
