@@ -1,180 +1,394 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Equipment Management</title>
+    <meta name="theme-color" content="#0b0b16">
+    <title>Campus Equipment | Lending Portal</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
+    <!-- Supabase Authentication -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-    <header class="topbar">
-        <div class="brand">
-            <div class="brand-icon">C</div>
-            <div>
-                <h2>Campus Equipment</h2>
-                <p>Equipment Lending Portal</p>
-            </div>
-        </div>
+    <div class="app-shell">
 
-        <button id="connectWallet" class="wallet-btn">
-            Connect MetaMask
-        </button>
-    </header>
+        <aside class="sidebar">
+            <a href="#dashboard" class="brand sidebar-brand">
+                <div class="brand-icon">C</div>
+                <div class="brand-copy">
+                    <h2>Campus<span>Equip</span></h2>
+                    <p>RESOURCE MANAGEMENT</p>
+                </div>
+            </a>
 
-    <main class="container">
+            <div class="sidebar-label">WORKSPACE</div>
 
-        <section class="welcome">
-            <div>
-                <p class="eyebrow">CAMPUS RESOURCE MANAGEMENT</p>
-                <h1>Equipment Lending System</h1>
-                <p class="subtitle">
-                    Manage campus equipment, track borrowing and maintain
-                    transparent transaction records on Ethereum.
-                </p>
-            </div>
-            <div class="network-card">
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="#dashboard" class="nav-link active">
+                    <span class="nav-icon">◈</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#inventory" class="nav-link">
+                    <span class="nav-icon">▤</span>
+                    <span>Equipment Inventory</span>
+                </a>
+                <a href="#register-equipment" class="nav-link">
+                    <span class="nav-icon">＋</span>
+                    <span>Register Equipment</span>
+                </a>
+                <a href="#my-activity" class="nav-link">
+                    <span class="nav-icon">↗</span>
+                    <span>My Borrowing Activity</span>
+                </a>
+                <a href="#transactions" class="nav-link">
+                    <span class="nav-icon">⌁</span>
+                    <span>Transaction Status</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-network">
                 <span class="status-dot"></span>
-                <span id="connectionStatus">Wallet not connected</span>
-            </div>
-        </section>
-
-        <section class="stats">
-            <div class="stat-card">
-                <p>Total Equipment</p>
-                <h2 id="totalEquipment">0</h2>
-                <span>Registered items</span>
-            </div>
-
-            <div class="stat-card">
-                <p>Available</p>
-                <h2 id="availableEquipment">0</h2>
-                <span>Ready to borrow</span>
-            </div>
-
-            <div class="stat-card">
-                <p>Currently Borrowed</p>
-                <h2 id="borrowedEquipment">0</h2>
-                <span>Items in use</span>
-            </div>
-        </section>
-
-        <section class="panel">
-            <div class="section-heading">
                 <div>
-                    <h2>Equipment Inventory</h2>
-                    <p>Browse registered campus equipment and its availability.</p>
+                    <strong>Sepolia Network</strong>
+                    <small>Ethereum test network</small>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-footer-icon">✦</div>
+                <div>
+                    <strong>Campus Equipment</strong>
+                    <small>Blockchain lending portal</small>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-shell">
+
+            <header class="topbar">
+                <div class="topbar-heading">
+                    <p class="eyebrow">CAMPUS RESOURCE MANAGEMENT</p>
+                    <h2>Equipment Portal</h2>
                 </div>
 
-                <button id="refreshButton" class="secondary-btn">
-                    Refresh Inventory
-                </button>
-            </div>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Equipment ID</th>
-                            <th>Equipment Name</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th>Borrower</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="equipmentTable">
-                        <tr>
-                            <td colspan="6" class="empty">
-                                Connect your wallet and load the inventory.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="two-column">
-
-            <div class="panel">
-                <div class="section-heading">
-                    <div>
-                        <h2>Register Equipment</h2>
-                        <p>Admin access required.</p>
+                <div class="topbar-actions">
+                    <div class="network-pill">
+                        <span class="status-dot"></span>
+                        Sepolia
                     </div>
-                </div>
 
-                <form id="registerForm">
-                    <label for="equipmentName">Equipment Name</label>
-                    <input
-                        type="text"
-                        id="equipmentName"
-                        placeholder="e.g. Laptop"
-                        required
-                    >
-
-                    <label for="equipmentCategory">Category</label>
-                    <select id="equipmentCategory" required>
-                        <option value="">Select category</option>
-                        <option value="Computing">Computing</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Camera">Camera</option>
-                        <option value="Display">Display</option>
-                        <option value="Audio">Audio</option>
-                        <option value="Laboratory">Laboratory</option>
-                        <option value="Other">Other</option>
-                    </select>
-                    <input
-                        type="text"
-                        id="customCategory"
-                        placeholder="Enter custom category"
-                        style="display: none;"
-                    />
-                    <button type="submit" class="primary-btn">
-                        Register Equipment
+                    <button id="connectWallet" class="wallet-btn">
+                        Connect MetaMask
                     </button>
-                </form>
-            </div>
+                </div>
+            </header>
 
-            <div class="panel">
-                <div class="section-heading">
-                    <div>
-                        <h2>My Borrowing Activity</h2>
-                        <p>Check your equipment borrowing records.</p>
+            <main class="container" id="dashboard">
+
+                <section class="welcome hero-panel">
+                    <div class="hero-content">
+                        <div class="hero-tag">
+                            <span>✦</span>
+                            SMART CAMPUS SOLUTIONS
+                        </div>
+
+                        <h1>Everything you need.<br><span>One campus portal.</span></h1>
+
+                        <p class="subtitle">
+                            Discover campus equipment, borrow what you need,
+                            and track every transaction securely on Ethereum.
+                        </p>
+
+                        <a href="#inventory" class="hero-link">
+                            Explore equipment <span>→</span>
+                        </a>
                     </div>
-                </div>
 
-                <div id="activityArea" class="activity-area">
-                    Connect your wallet to view your activity.
-                </div>
-            </div>
+                    <div class="hero-art" aria-hidden="true">
+                        <div class="hero-orbit orbit-one"></div>
+                        <div class="hero-orbit orbit-two"></div>
+                        <div class="hero-glow"></div>
+                        <div class="hero-symbol">C</div>
+                        <div class="floating-chip chip-one">ETH</div>
+                        <div class="floating-chip chip-two">✓ Verified</div>
+                    </div>
 
-        </section>
+                    <div class="network-card">
+                        <span class="status-dot"></span>
+                        <span id="connectionStatus">Wallet not connected</span>
+                    </div>
+                </section>
 
-        <section class="panel">
-            <div class="section-heading">
-                <div>
-                    <h2>Transaction Status</h2>
-                    <p>Updates from smart contract operations.</p>
-                </div>
-            </div>
+                <section class="stats">
+                    <div class="stat-card">
+                        <div class="stat-topline">
+                            <span class="stat-icon purple-icon">▤</span>
+                            <span class="stat-caption">INVENTORY</span>
+                        </div>
+                        <p>Total Equipment</p>
+                        <h2 id="totalEquipment">0</h2>
+                        <span class="stat-description">Registered items</span>
+                    </div>
 
-            <div id="messageBox" class="message">
-                Website ready. Connect your wallet to begin.
-            </div>
+                    <div class="stat-card">
+                        <div class="stat-topline">
+                            <span class="stat-icon green-icon">✓</span>
+                            <span class="stat-caption">AVAILABLE</span>
+                        </div>
+                        <p>Available Equipment</p>
+                        <h2 id="availableEquipment">0</h2>
+                        <span class="stat-description">Ready to borrow</span>
+                    </div>
 
-            <p id="transactionHash" class="transaction-hash"></p>
-        </section>
+                    <div class="stat-card">
+                        <div class="stat-topline">
+                            <span class="stat-icon blue-icon">↗</span>
+                            <span class="stat-caption">IN USE</span>
+                        </div>
+                        <p>Currently Borrowed</p>
+                        <h2 id="borrowedEquipment">0</h2>
+                        <span class="stat-description">Items currently in use</span>
+                    </div>
+                </section>
 
-        <footer>
-            <p>Campus Equipment Lending System</p>
-            <p>Powered by Ethereum Smart Contracts</p>
-        </footer>
+                <section class="panel" id="inventory">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-kicker">CAMPUS RESOURCES</span>
+                            <h2>Equipment Inventory</h2>
+                            <p>Browse equipment and check its current availability.</p>
+                        </div>
 
-    </main>
+                        <button id="refreshButton" class="secondary-btn">
+                            ↻ Refresh Inventory
+                        </button>
+                    </div>
 
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Equipment ID</th>
+                                    <th>Equipment Name</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Borrower</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="equipmentTable">
+                                <tr>
+                                    <td colspan="6" class="empty">
+                                        Connect your wallet and load the inventory.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="two-column">
+
+                    <div class="panel" id="register-equipment">
+                        <div class="section-heading">
+                            <div>
+                                <span class="section-kicker">ADMIN WORKSPACE</span>
+                                <h2>Register Equipment</h2>
+                                <p>Add a new item to the campus inventory.</p>
+                            </div>
+                            <span class="panel-symbol">＋</span>
+                        </div>
+
+                        <form id="registerForm">
+                            <label for="equipmentName">Equipment Name</label>
+                            <input
+                                type="text"
+                                id="equipmentName"
+                                placeholder="e.g. Laptop"
+                                required
+                            >
+
+                            <label for="equipmentCategory">Category</label>
+                            <select id="equipmentCategory" required>
+                                <option value="">Select category</option>
+                                <option value="Computing">Computing</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Camera">Camera</option>
+                                <option value="Display">Display</option>
+                                <option value="Audio">Audio</option>
+                                <option value="Laboratory">Laboratory</option>
+                                <option value="Other">Other</option>
+                            </select>
+
+                            <input
+                                type="text"
+                                id="customCategory"
+                                placeholder="Enter custom category"
+                                style="display: none;"
+                            >
+
+                            <button type="submit" class="primary-btn">
+                                + Register Equipment
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="panel" id="my-activity">
+                        <div class="section-heading">
+                            <div>
+                                <span class="section-kicker">PERSONAL OVERVIEW</span>
+                                <h2>My Borrowing Activity</h2>
+                                <p>Review your equipment borrowing records.</p>
+                            </div>
+                            <span class="panel-symbol">↗</span>
+                        </div>
+
+                        <div id="activityArea" class="activity-area">
+                            Connect your wallet to view your activity.
+                        </div>
+                    </div>
+
+                </section>
+
+                <section class="panel" id="transactions">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-kicker">BLOCKCHAIN ACTIVITY</span>
+                            <h2>Transaction Status</h2>
+                            <p>Updates from smart contract operations.</p>
+                        </div>
+                        <span class="panel-symbol">⌁</span>
+                    </div>
+
+                    <div id="messageBox" class="message">
+                        Website ready. Connect your wallet to begin.
+                    </div>
+
+                    <p id="transactionHash" class="transaction-hash"></p>
+                </section>
+
+                <footer>
+                    <p>© Campus Equipment Lending System</p>
+                    <p>Secured by Ethereum Smart Contracts · Sepolia</p>
+                </footer>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Ethereum Smart Contract Library -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+
+    <!-- Supabase Client Configuration -->
+    <script>
+        window.supabaseClient = window.supabase.createClient(
+            "https://qfbheuqyghmoiyuxapme.supabase.co",
+            "sb_publishable_l4rsTlDylfAtTEl7tvx8CQ_753W3iPB"
+        );
+    </script>
+
+    <!-- Existing Equipment Lending Logic -->
     <script src="app.js"></script>
+
+    
+<!-- Sidebar single-view navigation -->
+<script>
+(function () {
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    const hero = document.querySelector(".hero-panel");
+    const stats = document.querySelector(".stats");
+    const inventory = document.getElementById("inventory");
+    const registerPanel = document.getElementById("register-equipment");
+    const activityPanel = document.getElementById("my-activity");
+    const transactions = document.getElementById("transactions");
+    const twoColumn = document.querySelector(".two-column");
+
+    function showView(view) {
+        // Hide all main content sections first.
+        if (hero) hero.style.display = "none";
+        if (stats) stats.style.display = "none";
+        if (inventory) inventory.style.display = "none";
+        if (registerPanel) registerPanel.style.display = "none";
+        if (activityPanel) activityPanel.style.display = "none";
+        if (twoColumn) twoColumn.style.display = "none";
+        if (transactions) transactions.style.display = "none";
+
+        // Display only the selected view.
+        switch (view) {
+            case "dashboard":
+                if (hero) hero.style.display = "flex";
+                if (stats) stats.style.display = "grid";
+                break;
+
+            case "inventory":
+                if (inventory) inventory.style.display = "block";
+                break;
+
+            case "register-equipment":
+                if (registerPanel) registerPanel.style.display = "block";
+                if (twoColumn) twoColumn.style.display = "block";
+                if (activityPanel) activityPanel.style.display = "none";
+                break;
+
+            case "my-activity":
+                if (activityPanel) activityPanel.style.display = "block";
+                if (twoColumn) twoColumn.style.display = "block";
+                if (registerPanel) registerPanel.style.display = "none";
+                break;
+
+            case "transactions":
+                if (transactions) transactions.style.display = "block";
+                break;
+
+            default:
+                if (hero) hero.style.display = "flex";
+                if (stats) stats.style.display = "grid";
+        }
+
+        // Update the selected sidebar item.
+        navLinks.forEach(function (link) {
+            const selected = link.dataset.view === view;
+            link.classList.toggle("active", selected);
+
+            if (selected) {
+                link.setAttribute("aria-current", "page");
+            } else {
+                link.removeAttribute("aria-current");
+            }
+        });
+
+        // Keep navigation changes at the top of the content area.
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Connect each sidebar link to its view.
+    navLinks.forEach(function (link) {
+        const href = link.getAttribute("href") || "";
+        const view = href.replace("#", "");
+
+        link.dataset.view = view;
+
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+            showView(view);
+        });
+    });
+
+    // Start on the dashboard.
+    showView("dashboard");
+})();
+</script>
+
 
 </body>
 </html>
